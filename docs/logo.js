@@ -39,86 +39,11 @@ document.addEventListener('DOMContentLoaded', () => {
   } catch (e) {}
 
   // Look for a custom logo in public/assets/custom-logo
-  const logoFilenames = [
-    'logo.svg', 'logo.png', 'logo.webp', 'logo.jpg', 'logo.jpeg', 'logo.gif'
-  ];
+  // Only use the explicitly set logo, do not override with custom-logo logic
+  // Remove custom logo logic to avoid overriding DEW LOGO white.png
 
-  async function findCustomLogo() {
-    for (const fname of logoFilenames) {
-      const url = `assets/custom-logo/${fname}`;
-      try {
-        // Use HEAD first for efficiency
-        const resp = await fetch(url, { method: 'HEAD', cache: 'no-store' });
-        if (resp.ok) return url;
-      } catch (e) {
-        try {
-          const resp2 = await fetch(url, { method: 'GET', cache: 'no-store' });
-          if (resp2.ok) return url;
-        } catch (e2) {
-          // continue to next
-        }
-      }
-    }
-    return null;
-  }
-
-  // attempt to preload potential custom logo images and use the first that loads successfully
-  async function preloadFirstWorkingLogo() {
-    // Prefer server-side listing
-    try {
-      const resp = await fetch('api/custom-logo', { cache: 'no-store' });
-      if (resp.ok) {
-        const data = await resp.json();
-        if (data.files && data.files.length) {
-          for (const f of data.files) {
-            const url = f.url;
-            try {
-              await new Promise((resolve, reject) => {
-                const img = new Image();
-                img.onload = () => resolve();
-                img.onerror = () => reject(new Error('failed to load ' + url));
-                img.src = url;
-              });
-              // success
-              logo.setAttribute('src', url);
-              logo.classList.remove('filter-white');
-              console.info('Using custom logo (from API):', url);
-              return true;
-            } catch (e) {
-              console.warn('Custom logo failed to load:', url, e.message);
-              continue;
-            }
-          }
-        }
-      }
-    } catch (e) {
-      console.warn('Could not fetch /api/custom-logo', e.message);
-    }
-
-    // Fallback: try the standard candidate filenames in order
-    for (const fname of logoFilenames) {
-      const url = `assets/custom-logo/${fname}`;
-      try {
-        await new Promise((resolve, reject) => {
-          const img = new Image();
-          img.onload = () => resolve();
-          img.onerror = () => reject(new Error('failed to load ' + url));
-          img.src = url;
-        });
-        logo.setAttribute('src', url);
-        logo.classList.remove('filter-white');
-        console.info('Using custom logo (fallback):', url);
-        return true;
-      } catch (e) {
-        // try next
-      }
-    }
-
-    return false;
-  }
-
+  // No custom logo logic needed; use the logo as set in the HTML
   (async () => {
-    await preloadFirstWorkingLogo();
 
     // clicking the logo should navigate to the next chapter when possible
     logo.addEventListener('click', async (e) => {
