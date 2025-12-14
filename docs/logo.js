@@ -142,7 +142,7 @@ document.addEventListener('DOMContentLoaded', () => {
           let nextIdx = currentIdx + 1;
           if (nextIdx >= chapters.length) nextIdx = 0; // wrap to first
           const nextSlug = chapters[nextIdx];
-          location.href = `viewer.html?comic=${encodeURIComponent(comic)}&chapter=${encodeURIComponent(nextSlug)}`;
+          location.href = `https://imbadart.github.io/Official-D.E.W.-Comic-Website/viewer.html?comic=${encodeURIComponent(comic)}&chapter=${encodeURIComponent(nextSlug)}`;
           return;
         } catch (e) { }
       }
@@ -160,9 +160,9 @@ document.addEventListener('DOMContentLoaded', () => {
           const cdata = await cresp.json();
           if (cdata.chapters && cdata.chapters.length) {
             const first = cdata.chapters[0].slug;
-            location.href = `viewer.html?comic=${encodeURIComponent(slug)}&chapter=${encodeURIComponent(first)}`;
+            location.href = `https://imbadart.github.io/Official-D.E.W.-Comic-Website/viewer.html?comic=${encodeURIComponent(slug)}&chapter=${encodeURIComponent(first)}`;
           } else {
-            location.href = `viewer.html?comic=${encodeURIComponent(slug)}`;
+            location.href = `https://imbadart.github.io/Official-D.E.W.-Comic-Website/viewer.html?comic=${encodeURIComponent(slug)}`;
           }
         }
       } catch (e) {
