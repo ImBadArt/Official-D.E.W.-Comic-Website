@@ -1,10 +1,29 @@
 <!doctype html>
-<html>
+<html lang="en">
 <head>
-  <meta http-equiv="refresh" content="0; url=viewer.html">
-  <title>Redirecting…</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Comic Viewer</title>
+  <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
-  <p>Redirecting to <a href="viewer.html">viewer.html</a>…</p>
+  <header>
+    <h1 id="comicTitle">Loading...</h1>
+  </header>
+  <main class="viewer">
+    <div class="controls">
+      <select id="chapterSelect"></select>
+      <button id="prevChapter" class="btn secondary">Prev Chapter</button>
+      <button id="nextChapter" class="btn secondary">Next Chapter</button>
+    </div>
+
+    <div id="viewerPages"></div>
+  </main>
+  <script src="viewer.js"></script>
+  <script src="patterns.js" defer></script>
+  <script src="logo.js" defer></script>
+  <footer>
+    <img src="/assets/logo.svg" alt="Site logo" class="site-logo" />
+  </footer>
 </body>
 </html>
