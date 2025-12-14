@@ -118,17 +118,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   (async () => {
-    const ok = await preloadFirstWorkingLogo();
-    if (!ok) {
-      // If the default logo is a bitmap, apply filter to make it white for dark background
-      try {
-        const src = logo.getAttribute('src') || '';
-        const lower = src.toLowerCase();
-        if (lower.endsWith('.png') || lower.endsWith('.jpg') || lower.endsWith('.jpeg') || lower.endsWith('.gif')) {
-          logo.classList.add('filter-white');
-        }
-      } catch (e) { }
-    }
+    await preloadFirstWorkingLogo();
 
     // clicking the logo should navigate to the next chapter when possible
     logo.addEventListener('click', async (e) => {
