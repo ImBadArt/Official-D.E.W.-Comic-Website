@@ -20,8 +20,8 @@ async function loadComic() {
     return;
   }
   // Static mode: load chapters.json
-  const comicMetaUrl = `../comics/${comicSlug}/meta.json`;
-  const chaptersUrl = `../comics/${comicSlug}/chapters.json`;
+  const comicMetaUrl = "comics/" + comicSlug + "/meta.json";
+  const chaptersUrl = "comics/" + comicSlug + "/chapters.json";
   try {
     const [metaResp, chaptersResp] = await Promise.all([
       fetch(comicMetaUrl),
@@ -75,7 +75,7 @@ async function loadChapter(idx) {
   chapterSelect.value = idx;
   try {
     // Static: load meta.json for chapter
-    const metaUrl = `../comics/${comicSlug}/chapters/${chapter.slug}/meta.json`;
+    const metaUrl = "comics/" + comicSlug + "/chapters/" + chapter.slug + "/meta.json";
     let chapterMeta = { title: chapter.title };
     try {
       const resp = await fetch(metaUrl);
@@ -86,7 +86,7 @@ async function loadChapter(idx) {
     viewerPages.innerHTML = '';
     pages.forEach((fname,i)=>{
       const img = document.createElement('img');
-      img.src = `../comics/${comicSlug}/chapters/${chapter.slug}/${fname}`;
+      img.src = "comics/" + comicSlug + "/chapters/" + chapter.slug + "/" + fname;
       img.loading = 'lazy';
       viewerPages.appendChild(img);
       // Auto-fit logic
