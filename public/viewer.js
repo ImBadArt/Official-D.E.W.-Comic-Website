@@ -19,20 +19,25 @@ async function loadComic() {
     showError('No comic specified; add ?comic=official-dew-comic-website to the URL.');
     return;
   }
-  // Static mode: hardcode chapters for this repo
+  // Static mode: load chapters.json
   const comicMetaUrl = `/comics/${comicSlug}/meta.json`;
+  const chaptersUrl = `/comics/${comicSlug}/chapters.json`;
   try {
-    const resp = await fetch(comicMetaUrl);
-    if (!resp.ok) throw new Error('Comic meta not found');
-    const meta = await resp.json();
+    const [metaResp, chaptersResp] = await Promise.all([
+      fetch(comicMetaUrl),
+      fetch(chaptersUrl)
+    ]);
+    if (!metaResp.ok) throw new Error('Comic meta not found');
+    if (!chaptersResp.ok) throw new Error('Chapters list not found');
+    const meta = await metaResp.json();
+    const chapters = await chaptersResp.json();
     comicTitleStr = meta.title || comicSlug;
     titleEl.textContent = comicTitleStr;
-    // List chapters (hardcoded for now, or you can generate a chapters.json)
-    const chapters = [
-      { slug: 'chapter-1', title: 'Chapter 1 - "wake up"', pagesCount: 2 },
-      { slug: 'chapter-2', title: 'Chapter 2 coming soon', pagesCount: 4 }
-    ];
-    state.chapters = chapters;
+    // Add pagesCount for UI
+    state.chapters = chapters.map(c => ({
+      ...c,
+      pagesCount: c.pages ? c.pages.length : 0
+    }));
     populateChapters(state.chapters);
     if (state.chapters.length) {
       const chapterParam = params.get('chapter');
@@ -76,13 +81,8 @@ async function loadChapter(idx) {
       const resp = await fetch(metaUrl);
       if (resp.ok) chapterMeta = await resp.json();
     } catch (e) {}
-    // List images for each chapter (hardcoded for now)
-    let pages = [];
-    if (chapter.slug === 'chapter-1') {
-      pages = [ '1.jpg', '3.jpg' ];
-    } else if (chapter.slug === 'chapter-2') {
-      pages = [ '1.jpg', '2.jpg', '3.png', '4.png' ];
-    }
+    // Use pages from chapters.json
+    const pages = chapter.pages || [];
     viewerPages.innerHTML = '';
     pages.forEach((fname,i)=>{
       const img = document.createElement('img');
