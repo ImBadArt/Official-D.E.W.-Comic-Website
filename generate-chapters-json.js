@@ -6,6 +6,7 @@ const path = require('path');
 
 const chaptersDir = path.join(__dirname, 'comics', 'official-dew-comic-website', 'chapters');
 const outputJson = path.join(__dirname, 'comics', 'official-dew-comic-website', 'chapters.json');
+const docsOutputJson = path.join(__dirname, 'docs', 'comics', 'official-dew-comic-website', 'chapters.json');
 
 function isImage(filename) {
   return /\.(jpg|jpeg|png|gif)$/i.test(filename);
@@ -39,6 +40,16 @@ function main() {
     });
   }
   fs.writeFileSync(outputJson, JSON.stringify(chapters, null, 2));
+  // Also write to docs/ if it exists
+  try {
+    if (fs.existsSync(path.join(__dirname, 'docs'))) {
+      fs.mkdirSync(path.dirname(docsOutputJson), { recursive: true });
+      fs.writeFileSync(docsOutputJson, JSON.stringify(chapters, null, 2));
+      console.log('Also wrote chapters.json to docs/comics/official-dew-comic-website/.');
+    }
+  } catch (e) {
+    console.warn('Could not write to docs/ path:', e.message);
+  }
   console.log('Generated chapters.json with', chapters.length, 'chapters.');
 }
 
