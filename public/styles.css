@@ -1,0 +1,88 @@
+* { box-sizing: border-box; }
+:root { --site-logo-width: 96px; }
+body { margin: 0; font-family: Inter, system-ui, Arial, sans-serif; background: linear-gradient(180deg,#02183a 0%, #000000 100%); color: #e6eefc; min-height: 100vh; }
+header { padding: 20px; text-align: center; background: transparent; border-bottom: 1px solid rgba(255,255,255,0.04); }
+h1 { margin: 0; color: #eaf6ff; }
+.subtitle { margin: 6px 0 0; color: #9fb7d6; }
+main { max-width: 1200px; margin: 28px auto; padding: 0 20px; }
+#comicsGrid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px,1fr)); gap: 18px; }
+.card { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.04); border-radius: 10px; overflow: hidden; display: flex; flex-direction: column; }
+.cover { width: 100%; height: 260px; object-fit: cover; background: rgba(255,255,255,0.02); display:block; }
+.card .info { padding: 12px; }
+.card h3 { margin: 0 0 6px; font-size: 16px; color: #e6eefc; }
+.card p { margin: 0; font-size: 13px; color: #9fb7d6; }
+.card a { display:block; padding: 8px 12px; text-decoration:none; color: #66b2ff; border-top: 1px solid rgba(255,255,255,0.04); }
+.viewer { max-width: 960px; margin: 20px auto; }
+.controls { display:flex; gap:8px; margin-bottom: 8px; }
+.btn { background:#1e6fff;color:white;padding:8px 12px;border-radius:8px;border:none;cursor:pointer }
+.btn.secondary { background: rgba(255,255,255,0.06); color: #e6eefc }
+#viewerPages { display:flex; flex-direction: column; gap:12px; align-items:center; }
+#viewerPages img { width: auto; height: auto; max-width: 1000px; border-radius: 6px; background: rgba(0,0,0,0.3); }
+footer { position: relative; min-height: 48px; padding: 14px 0; text-align: center; }
+.site-logo {
+  position: fixed;
+  left: 50%;
+  transform: translateX(-50%) translateY(24px) scale(.95);
+  bottom: 12px;
+  width: var(--site-logo-width);
+  height: auto;
+  opacity: 0;
+  pointer-events: none;
+  filter: drop-shadow(0 4px 18px rgba(0,0,0,0.6));
+  transition: transform 320ms cubic-bezier(.2,.8,.2,1), opacity 320ms ease;
+  will-change: transform, opacity;
+}
+.site-logo.visible {
+  transform: translateX(-50%) translateY(0) scale(1);
+  opacity: 1;
+  animation: pop 420ms cubic-bezier(.2,.8,.2,1);
+  pointer-events: auto;
+  cursor: pointer;
+}
+@keyframes pop {
+  0% { transform: translateX(-50%) translateY(8px) scale(.92); }
+  60% { transform: translateX(-50%) translateY(-6px) scale(1.02); }
+  100% { transform: translateX(-50%) translateY(0) scale(1); }
+}
+@media (max-width:600px){ .cover{ height:160px } .site-logo{ width: calc(var(--site-logo-width) * 0.85); bottom: 8px } }
+
+/* For bitmap logos (png/jpg) we can force them to appear white */
+.site-logo.filter-white { filter: invert(1) grayscale(1) contrast(200%); }
+
+/* Pattern background sidebars */
+:root { --pattern-url: none; --pattern-width: 200px; --pattern-opacity: 0.12; --pattern-color: rgba(2,24,58,0.12); }
+
+body.has-pattern::before,
+body.has-pattern::after {
+  content: '';
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  width: var(--pattern-width);
+  pointer-events: none;
+  z-index: 0;
+  background-color: var(--pattern-color);
+  opacity: var(--pattern-opacity);
+  -webkit-mask-image: var(--pattern-url);
+  -webkit-mask-repeat: repeat-y;
+  -webkit-mask-size: auto 100%;
+  mask-image: var(--pattern-url);
+  mask-repeat: repeat-y;
+  mask-size: auto 100%;
+  /* fallback: use as background image and blend */
+  background-image: var(--pattern-url);
+  background-position: center top;
+  background-size: auto 100%;
+  background-repeat: repeat-y;
+  mix-blend-mode: overlay;
+}
+body.has-pattern::before { left: 0; }
+body.has-pattern::after { right: 0; transform: scaleX(-1); }
+
+/* Push content above patterns */
+header, main, footer, .viewer { position: relative; z-index: 1; }
+
+@media (max-width:800px){
+  body.has-pattern::before, body.has-pattern::after { display: none; }
+}
+

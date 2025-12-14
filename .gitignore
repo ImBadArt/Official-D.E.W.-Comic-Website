@@ -1,0 +1,8 @@
+node_modules/
+.env
+# Ignore uploaded images if you don't want them tracked
+comics/**/chapters/**/*.png
+comics/**/chapters/**/*.jpg
+comics/**/chapters/**/*.jpeg
+comics/**/chapters/**/*.gif
+comics/**/chapters/**/*.webp
