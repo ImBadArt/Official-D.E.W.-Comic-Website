@@ -13,25 +13,28 @@ function showError(msg) {
   viewerPages.innerHTML = `<p style="text-align:center;color:#6b7280;margin:20px 0">${msg}</p>`;
 }
 
+
 async function loadComic() {
   if (!comicSlug) {
-    showError('No comic specified; open /viewer.html?comic=<slug> or visit root to see a sample.');
+    showError('No comic specified; add ?comic=official-dew-comic-website to the URL.');
     return;
   }
+  // Static mode: hardcode chapters for this repo
+  const comicMetaUrl = `/comics/${comicSlug}/meta.json`;
   try {
-    const resp = await fetch(`/api/comics/${encodeURIComponent(comicSlug)}`);
-    if (!resp.ok) {
-      showError('Comic not found.');
-      return;
-    }
-    const data = await resp.json();
-    comicTitleStr = data.meta.title || comicSlug;
+    const resp = await fetch(comicMetaUrl);
+    if (!resp.ok) throw new Error('Comic meta not found');
+    const meta = await resp.json();
+    comicTitleStr = meta.title || comicSlug;
     titleEl.textContent = comicTitleStr;
-    state.chapters = data.chapters;
+    // List chapters (hardcoded for now, or you can generate a chapters.json)
+    const chapters = [
+      { slug: 'chapter-1', title: 'Chapter 1 - "wake up"', pagesCount: 2 },
+      { slug: 'chapter-2', title: 'Chapter 2 coming soon', pagesCount: 4 }
+    ];
+    state.chapters = chapters;
     populateChapters(state.chapters);
     if (state.chapters.length) {
-      // If a specific chapter slug is requested via ?chapter=slug, load it.
-      // By default, open the latest chapter (last index).
       const chapterParam = params.get('chapter');
       let startIdx = state.chapters.length - 1;
       if (chapterParam) {
@@ -39,10 +42,12 @@ async function loadComic() {
         if (found >= 0) startIdx = found;
       }
       loadChapter(startIdx);
-    } else viewerPages.innerHTML = '<p style="text-align:center;color:#6b7280;margin:20px 0">No chapters found for this comic.</p>';
+    } else {
+      viewerPages.innerHTML = '<p style="text-align:center;color:#6b7280;margin:20px 0">No chapters found for this comic.</p>';
+    }
   } catch (err) {
-    console.error('Failed to fetch comic:', err);
-    showError('Failed to fetch comic — is the server running?');
+    console.error('Failed to load comic:', err);
+    showError('Failed to load comic data.');
   }
 }
 
@@ -57,22 +62,34 @@ function populateChapters(chapters){
   }
 }
 
+
 async function loadChapter(idx) {
   const chapter = state.chapters[idx];
   if (!chapter) return;
   state.currentChapterIdx = idx;
   chapterSelect.value = idx;
   try {
-    const resp = await fetch(`/api/comics/${encodeURIComponent(comicSlug)}/chapters/${encodeURIComponent(chapter.slug)}`);
-    if (!resp.ok) { showError('Chapter not found'); return; }
-    const data = await resp.json();
+    // Static: load meta.json for chapter
+    const metaUrl = `/comics/${comicSlug}/chapters/${chapter.slug}/meta.json`;
+    let chapterMeta = { title: chapter.title };
+    try {
+      const resp = await fetch(metaUrl);
+      if (resp.ok) chapterMeta = await resp.json();
+    } catch (e) {}
+    // List images for each chapter (hardcoded for now)
+    let pages = [];
+    if (chapter.slug === 'chapter-1') {
+      pages = [ '1.jpg', '3.jpg' ];
+    } else if (chapter.slug === 'chapter-2') {
+      pages = [ '1.jpg', '2.jpg', '3.png', '4.png' ];
+    }
     viewerPages.innerHTML = '';
-    data.pages.forEach((p,i)=>{
+    pages.forEach((fname,i)=>{
       const img = document.createElement('img');
-      img.src = p.url;
+      img.src = `/comics/${comicSlug}/chapters/${chapter.slug}/${fname}`;
       img.loading = 'lazy';
       viewerPages.appendChild(img);
-      // Auto-detect whether to fit: if the image is wider than the viewer, fit it to width; else display at native size
+      // Auto-fit logic
       const applyFit = () => {
         try {
           const containerWidth = viewerPages.clientWidth || window.innerWidth;
@@ -81,11 +98,9 @@ async function loadChapter(idx) {
         } catch(e) {}
       };
       img.addEventListener('load', () => applyFit());
-      // In case the image is already cached and load won't fire
       setTimeout(() => applyFit(), 50);
     });
-    // use chapter meta title if provided
-  const chapterTitle = (data.meta && data.meta.title) ? data.meta.title : chapter.title;
+    const chapterTitle = chapterMeta.title || chapter.title;
     titleEl.textContent = `${comicTitleStr} — ${chapterTitle}`;
 
     // set data attributes on the global logo so clicks can navigate chapters
@@ -111,8 +126,8 @@ async function loadChapter(idx) {
     prevChapterBtn.disabled = idx === 0;
     nextChapterBtn.disabled = idx >= state.chapters.length - 1;
   } catch (err) {
-    console.error('Failed to fetch chapter:', err);
-    showError('Failed to load chapter — is the server running?');
+    console.error('Failed to load chapter:', err);
+    showError('Failed to load chapter.');
   }
 }
 
