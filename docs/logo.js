@@ -45,7 +45,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   async function findCustomLogo() {
     for (const fname of logoFilenames) {
-      const url = `/assets/custom-logo/${fname}`;
+      const url = `assets/custom-logo/${fname}`;
       try {
         // Use HEAD first for efficiency
         const resp = await fetch(url, { method: 'HEAD', cache: 'no-store' });
@@ -66,7 +66,7 @@ document.addEventListener('DOMContentLoaded', () => {
   async function preloadFirstWorkingLogo() {
     // Prefer server-side listing
     try {
-      const resp = await fetch('/api/custom-logo', { cache: 'no-store' });
+      const resp = await fetch('api/custom-logo', { cache: 'no-store' });
       if (resp.ok) {
         const data = await resp.json();
         if (data.files && data.files.length) {
@@ -97,7 +97,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Fallback: try the standard candidate filenames in order
     for (const fname of logoFilenames) {
-      const url = `/assets/custom-logo/${fname}`;
+      const url = `assets/custom-logo/${fname}`;
       try {
         await new Promise((resolve, reject) => {
           const img = new Image();
@@ -149,13 +149,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
       // Otherwise, go to first comic's first chapter
       try {
-        const resp = await fetch('/api/comics', { cache: 'no-store' });
+        const resp = await fetch('api/comics', { cache: 'no-store' });
         if (!resp.ok) return;
         const data = await resp.json();
         if (data.comics && data.comics.length) {
           const slug = data.comics[0].slug;
           // fetch comic details to find first chapter
-          const cresp = await fetch(`/api/comics/${encodeURIComponent(slug)}`, { cache: 'no-store' });
+          const cresp = await fetch(`api/comics/${encodeURIComponent(slug)}`, { cache: 'no-store' });
           if (!cresp.ok) return;
           const cdata = await cresp.json();
           if (cdata.chapters && cdata.chapters.length) {
