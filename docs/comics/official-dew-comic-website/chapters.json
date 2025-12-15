@@ -1,5 +1,10 @@
 [
   {
+    "slug": "chapter-0",
+    "title": "Chapter 0 - \"heads up\"",
+    "pages": ["1.png"]
+  },
+  {
     "slug": "chapter-1",
     "title": "Chapter 1 - \"wake up\"",
     "pages": ["1.jpg", "3.jpg"]
@@ -9,4 +14,5 @@
     "title": "Chapter 2 coming soon",
     "pages": ["1.jpg", "2.jpg", "3.png", "4.png"]
   }
+
 ]
