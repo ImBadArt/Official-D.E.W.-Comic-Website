@@ -11,8 +11,13 @@
   },
   {
     "slug": "chapter-2",
-    "title": "Chapter 2 coming soon",
-    "pages": ["coming soon.png"]
+    "title": "Chapter 2 - \"little robot\"",
+    "pages": ["9.png", "10.png", "11.png", "12.png", "13.png", "14.png", "15.png", "16.png", "17.5.png", "17.png" ]
+  },
+  {
+    "slug": "chapter-3",
+    "title": "coming soon",
+    "pages": ["coming-soon.png"]
   }
 
 ]
