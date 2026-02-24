@@ -26,7 +26,12 @@
   },
   {
     "slug": "chapter-5",
-    "title": "Chapter 5 - coming soon",
+    "title": "Chapter 5 - \"memory-1\"",
+    "pages": ["38.png", "39.png", "40.png", "41.png", "42.png", "43.png", "44.png", "45.png", "45.5.png"]
+  },
+  {
+    "slug": "chapter-6",
+    "title": "Chapter 6 - coming soon",
     "pages": ["coming soon.png"]
   }
 
