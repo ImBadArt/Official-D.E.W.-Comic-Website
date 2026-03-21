@@ -31,8 +31,13 @@
   },
   {
     "slug": "chapter-6",
-    "title": "Chapter 6 - coming soon",
-    "pages": ["coming soon.png"]
+    "title": "Chapter 6 - \"city\"",
+    "pages": ["46.png", "47.png", "48.png", "49.png", "49.5.png", "49.6.png"]
+  },
+  {
+    "slug": "chapter-7",
+    "title": "Chapter 7 - \"coming soon",
+    "pages": ["coming-soon.png"]
   }
 
 ]
