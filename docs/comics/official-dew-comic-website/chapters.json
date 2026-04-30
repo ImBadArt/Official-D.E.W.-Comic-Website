@@ -36,7 +36,12 @@
   },
   {
     "slug": "chapter-7",
-    "title": "Chapter 7 - \"coming soon\"",
+    "title": "Chapter 7 - \"decision\"",
+    "pages": ["50.png", "51.png", "52.png", "53.png", "54.png", "55.png", "56.png", "57.png", "58.png", "59.png", "60.png", "61.png", "62.png", "62.5.png"]
+  },
+  {
+    "slug": "chapter-8",
+    "title": "Chapter 8 - \"coming soon\"",
     "pages": ["coming soon.png"]
   }
 
